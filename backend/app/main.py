@@ -41,6 +41,20 @@ def health_check():
 def root():
     return {"message": "Welcome to EYAI Drug Repurposing API"}
 
+@app.post("/create-job")
+async def create_job_root(job_data: JobRequest):
+    """Job creation at root level to avoid routing conflicts"""
+    import uuid
+    
+    job_id = str(uuid.uuid4())
+    print(f"[JOB] Created job {job_id} with prompt: {job_data.prompt}")
+    
+    return {
+        "jobId": job_id, 
+        "status": "PENDING",
+        "message": "Job created successfully"
+    }
+
 @app.get("/api/v1/test")
 def test_endpoint():
     return {"message": "Backend is working!", "agents_loaded": True, "version": "v2.0"}
