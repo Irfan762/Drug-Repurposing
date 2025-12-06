@@ -44,4 +44,16 @@ def root():
 def test_endpoint():
     return {"message": "Backend is working!", "agents_loaded": True}
 
-# Removed duplicate endpoint - using the one in jobs router instead
+@app.post("/api/v1/jobs/query")
+async def create_job_simple(request_data: dict):
+    """Simple job creation endpoint"""
+    import uuid
+    
+    job_id = str(uuid.uuid4())
+    print(f"[JOB] Created job {job_id} with data: {request_data}")
+    
+    return {
+        "jobId": job_id, 
+        "status": "PENDING",
+        "message": "Job created successfully"
+    }
