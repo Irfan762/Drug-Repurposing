@@ -514,7 +514,9 @@ AGENT_PROGRESS_STORE = {}
 
 async def progress_callback(agent_name: str, progress: int, task: str):
     """Store agent progress for real-time API access"""
-    AGENT_PROGRESS_STORE[agent_name] = {
+    # Store with lowercase key for consistent access
+    key = agent_name.lower()
+    AGENT_PROGRESS_STORE[key] = {
         "progress": progress,
         "task": task,
         "status": "running" if progress < 100 else "completed"
