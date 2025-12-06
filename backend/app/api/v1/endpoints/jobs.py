@@ -9,6 +9,10 @@ import random
 
 router = APIRouter()
 
+@router.get("/test")
+async def test_jobs_endpoint():
+    return {"message": "Jobs endpoint is working!", "available_endpoints": ["/query", "/test"]}
+
 # CSV-Based Real Agent Orchestration
 from app.services.agents.csv_agents import orchestrate_csv_agents, aggregate_csv_results, get_agent_progress
 
@@ -41,9 +45,10 @@ async def run_agent_workflow(job_id: str, prompt: str):
 @router.post("/query", response_model=JobResponse)
 async def create_job(
     job_in: JobCreate, 
-    background_tasks: BackgroundTasks,
-    db: AsyncSession = Depends(deps.get_db)
-    # Temporarily removed auth for testing: current_user = Depends(deps.get_current_active_user)
+    background_tasks: BackgroundTasks
+    # Temporarily removed DB and auth for testing
+    # db: AsyncSession = Depends(deps.get_db)
+    # current_user = Depends(deps.get_current_active_user)
 ) -> Any:
     job_id = str(uuid.uuid4())
     # In real app: save to DB
