@@ -13,6 +13,10 @@ export default function QueryBuilder() {
 
         setIsLoading(true);
         try {
+            // Debug: Log the API URL being used
+            console.log("API Base URL:", import.meta.env.VITE_API_URL);
+            console.log("Full API URL:", import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api/v1` : '/api/v1');
+            
             const response = await jobsApi.create({
                 prompt: query,
                 databases: ["clinical", "patents", "genomic"],
@@ -30,7 +34,9 @@ export default function QueryBuilder() {
             });
         } catch (error) {
             console.error("Failed to launch job:", error);
-            alert("Failed to launch agents. Is the backend running?");
+            console.error("Error details:", error.response?.data || error.message);
+            console.error("Request URL:", error.config?.url);
+            alert(`Failed to launch agents. Error: ${error.response?.data?.detail || error.message || 'Backend connection failed'}`);
         } finally {
             setIsLoading(false);
         }
@@ -65,6 +71,11 @@ export default function QueryBuilder() {
                     <span className="text-purple-400 font-semibold"> 7 specialized AI agents</span> analyzing
                     billions of interactions in parallel.
                 </p>
+                
+                {/* Debug info - remove after testing */}
+                <div className="text-xs text-slate-500 mt-4">
+                    API URL: {import.meta.env.VITE_API_URL || 'Not set (using relative URLs)'}
+                </div>
 
                 {/* Stats */}
                 <div className="flex flex-wrap justify-center gap-6 mt-8">

@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=eyai_password
+      - POSTGRES_DB=eyai_cadd
+      - POSTGRES_SERVER=localhost
+      - SECRET_KEY=dev_secret_key
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-xxxx}
+      - HF_API_KEY=${HF_API_KEY:-xxxx}
+      - MODEL_NAME=gpt-4o-mini
+      - LOG_LEVEL=info
+      - PYTHONUNBUFFERED=1
+      - PORT=8000
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - db
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=eyai_password
+      - POSTGRES_DB=eyai_cadd
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
