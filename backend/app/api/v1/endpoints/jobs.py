@@ -6,6 +6,7 @@ from app.schemas.schemas import JobCreate, JobResponse, JobStatusResponse, JobSt
 import uuid
 import asyncio
 import random
+import io
 
 router = APIRouter()
 
@@ -149,8 +150,11 @@ async def export_job_results(
     # Temporarily removed auth: current_user = Depends(deps.get_current_active_user)
 ) -> Any:
     # Generate actual export using CSV data
-    from app.services.export_service import generate_fda21_pdf, generate_excel_export
-    from fastapi.responses import StreamingResponse
+    try:
+        from app.services.export_service import generate_fda21_pdf, generate_excel_export
+        from fastapi.responses import StreamingResponse
+    except ImportError as e:
+        raise HTTPException(status_code=500, detail=f"Export service not available: {e}")
     
     export_id = str(uuid.uuid4())
     
@@ -164,14 +168,24 @@ async def export_job_results(
     
     # Generate PDF if requested
     if "pdf" in [f.value for f in export_req.formats]:
-        pdf_buffer = generate_fda21_pdf(job_id, prompt, candidates, agent_outputs)
-        
-        # Return file directly for download
-        return StreamingResponse(
-            pdf_buffer,
-            media_type="application/pdf",
-            headers={"Content-Disposition": f"attachment; filename=FDA21_Report_{job_id}.pdf"}
-        )
+        try:
+            pdf_buffer = generate_fda21_pdf(job_id, prompt, candidates, agent_outputs)
+            
+            # Return file directly for download
+            return StreamingResponse(
+                io.BytesIO(pdf_buffer.read()),
+                media_type="application/pdf",
+                headers={"Content-Disposition": f"attachment; filename=FDA21_Report_{job_id}.pdf"}
+            )
+        except Exception as e:
+            print(f"[EXPORT] PDF generation failed: {e}")
+            # Return error response instead of crashing
+            return {
+                "exportId": export_id,
+                "status": "error",
+                "downloadUrl": None,
+                "error": f"PDF generation failed: {str(e)}"
+            }
     
     # For other formats, return export ID
     return {

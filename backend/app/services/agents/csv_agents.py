@@ -52,6 +52,12 @@ class BaseAgent:
         """Update agent progress and notify callback"""
         self.progress = progress
         self.current_task = task
+        # Update status based on progress
+        if progress >= 100:
+            self.status = "completed"
+        elif progress > 0:
+            self.status = "running"
+        
         if self.progress_callback:
             await self.progress_callback(self.name, progress, task)
         
@@ -516,12 +522,21 @@ async def progress_callback(agent_name: str, progress: int, task: str):
     """Store agent progress for real-time API access"""
     # Store with lowercase key for consistent access
     key = agent_name.lower()
+    
+    # Determine status based on progress and task content
+    if progress >= 100 or "✓ Analysis complete" in task:
+        status = "completed"
+    elif progress > 0:
+        status = "running"
+    else:
+        status = "pending"
+    
     AGENT_PROGRESS_STORE[key] = {
         "progress": progress,
         "task": task,
-        "status": "running" if progress < 100 else "completed"
+        "status": status
     }
-    print(f"[{agent_name.upper()}] {progress}% - {task}")
+    print(f"[{agent_name.upper()}] {progress}% - {task} [{status.upper()}]")
 
 async def orchestrate_csv_agents(query: str, job_id: str = None) -> Dict[str, Any]:
     """
