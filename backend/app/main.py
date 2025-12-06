@@ -52,14 +52,9 @@ class JobRequest(BaseModel):
     databases: list = []
     options: dict = {}
 
-@app.get("/api/v1/jobs/query")
-async def test_job_endpoint():
-    """Test endpoint to verify route is working"""
-    return {"message": "Job endpoint is accessible", "method": "GET"}
-
-@app.post("/api/v1/jobs/query")
-async def create_job_simple(job_data: JobRequest):
-    """Simple job creation endpoint"""
+@app.post("/api/v1/jobs/create")
+async def create_job_new_route(job_data: JobRequest):
+    """Job creation endpoint with different route"""
     import uuid
     
     job_id = str(uuid.uuid4())

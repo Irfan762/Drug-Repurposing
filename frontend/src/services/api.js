@@ -16,7 +16,7 @@ api.interceptors.request.use((config) => {
 });
 
 export const jobsApi = {
-    create: (data) => api.post('/jobs/query', data),
+    create: (data) => api.post('/jobs/create', data),
     getStatus: (jobId) => api.get(`/jobs/${jobId}/status`),
     getResults: (jobId) => api.get(`/jobs/${jobId}/results`),
 };
