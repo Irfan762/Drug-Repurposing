@@ -7,10 +7,7 @@ from pydantic import BaseModel
 
 from contextlib import asynccontextmanager
 
-class JobRequest(BaseModel):
-    prompt: str
-    databases: list = []
-    options: dict = {}
+# JobRequest moved to schemas
 from app.db.session import engine
 from app.models.sql_models import Base
 
@@ -36,8 +33,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Temporarily disable API router to test direct endpoint
-# app.include_router(api_router, prefix=settings.API_V1_STR)
+# Include the full API router with all endpoints
+app.include_router(api_router, prefix=settings.API_V1_STR)
 
 @app.get("/health")
 def health_check():
@@ -47,40 +44,7 @@ def health_check():
 def root():
     return {"message": "Welcome to EYAI Drug Repurposing API"}
 
-@app.post("/create-job")
-async def create_job_root(job_data: JobRequest):
-    """Job creation at root level to avoid routing conflicts"""
-    import uuid
-    
-    job_id = str(uuid.uuid4())
-    print(f"[JOB] Created job {job_id} with prompt: {job_data.prompt}")
-    
-    return {
-        "jobId": job_id, 
-        "status": "PENDING",
-        "message": "Job created successfully"
-    }
-
-@app.get("/api/v1/test")
+# Test endpoint to verify backend is working
+@app.get("/test")
 def test_endpoint():
     return {"message": "Backend is working!", "agents_loaded": True, "version": "v2.0"}
-
-@app.get("/api/v1/jobs/create")
-def test_create_endpoint():
-    return {"message": "Create endpoint exists", "method": "GET", "note": "Use POST to create jobs"}
-
-# Moved JobRequest class to top of file
-
-@app.post("/api/v1/jobs/create")
-async def create_job_new_route(job_data: JobRequest):
-    """Job creation endpoint with different route"""
-    import uuid
-    
-    job_id = str(uuid.uuid4())
-    print(f"[JOB] Created job {job_id} with prompt: {job_data.prompt}")
-    
-    return {
-        "jobId": job_id, 
-        "status": "PENDING",
-        "message": "Job created successfully"
-    }
