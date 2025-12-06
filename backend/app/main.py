@@ -43,7 +43,11 @@ def root():
 
 @app.get("/api/v1/test")
 def test_endpoint():
-    return {"message": "Backend is working!", "agents_loaded": True}
+    return {"message": "Backend is working!", "agents_loaded": True, "version": "v2.0"}
+
+@app.get("/api/v1/jobs/create")
+def test_create_endpoint():
+    return {"message": "Create endpoint exists", "method": "GET", "note": "Use POST to create jobs"}
 
 from pydantic import BaseModel
 
