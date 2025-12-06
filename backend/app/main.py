@@ -44,13 +44,20 @@ def root():
 def test_endpoint():
     return {"message": "Backend is working!", "agents_loaded": True}
 
+from pydantic import BaseModel
+
+class JobRequest(BaseModel):
+    prompt: str
+    databases: list = []
+    options: dict = {}
+
 @app.post("/api/v1/jobs/query")
-async def create_job_simple(request_data: dict):
+async def create_job_simple(job_data: JobRequest):
     """Simple job creation endpoint"""
     import uuid
     
     job_id = str(uuid.uuid4())
-    print(f"[JOB] Created job {job_id} with data: {request_data}")
+    print(f"[JOB] Created job {job_id} with prompt: {job_data.prompt}")
     
     return {
         "jobId": job_id, 
