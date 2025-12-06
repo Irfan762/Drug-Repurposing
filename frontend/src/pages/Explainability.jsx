@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Network, GitBranch, CheckCircle, FileText, ArrowRight, Shield, Target } from 'lucide-react';
+import { Network, GitBranch, CheckCircle, FileText, ArrowRight, Shield, Target, BarChart3, Activity } from 'lucide-react';
 import { jobsApi } from '../services/api';
+import { AgentWorkflowGraph } from '../components/AgentWorkflowGraph';
+import { DrugRelationshipGraph } from '../components/DrugRelationshipGraph';
+import { CandidateScoreChart, DataSourceDistribution, AgentPerformanceRadar, ScoreVsMarketChart } from '../components/DataAnalyticsCharts';
 
 export default function Explainability() {
     const location = useLocation();
@@ -9,7 +12,10 @@ export default function Explainability() {
     const [jobId, setJobId] = useState(location.state?.jobId || null);
     const [candidateId, setCandidateId] = useState(location.state?.candidateId || null);
     const [xaiData, setXaiData] = useState(null);
+    const [candidates, setCandidates] = useState([]);
+    const [agentStatus, setAgentStatus] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState('workflow');
 
     useEffect(() => {
         const fetchExplainability = async () => {
@@ -19,11 +25,17 @@ export default function Explainability() {
             }
 
             try {
-                const res = await jobsApi.getResults(jobId);
-                const candidates = res.data.candidates || [];
+                const [resultsRes, statusRes] = await Promise.all([
+                    jobsApi.getResults(jobId),
+                    jobsApi.getStatus(jobId)
+                ]);
+                
+                const fetchedCandidates = resultsRes.data.candidates || [];
+                setCandidates(fetchedCandidates);
+                setAgentStatus(statusRes.data.perAgentStatus || []);
 
-                if (candidates.length > 0) {
-                    const candidate = candidates[0];
+                if (fetchedCandidates.length > 0) {
+                    const candidate = fetchedCandidates[0];
 
                     const explainData = {
                         drug: candidate.drug,
@@ -126,46 +138,67 @@ export default function Explainability() {
                 </div>
             </div>
 
-            {/* Knowledge Graph */}
+            {/* Interactive Visualizations */}
             <div className="glass-ultra p-8 rounded-3xl slide-in-bottom delay-100">
                 <h3 className="text-2xl font-black text-white mb-6 flex items-center gap-3">
                     <div className="p-3 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 shadow-lg icon-glow">
-                        <Network className="w-7 h-7 text-white" />
+                        <BarChart3 className="w-7 h-7 text-white" />
                     </div>
-                    Knowledge Graph
+                    Interactive Visualizations
                 </h3>
-                <div className="glass-ultra p-10 rounded-2xl border-neon min-h-[350px]">
-                    <div className="flex flex-col items-center justify-center gap-10">
-                        {/* User Query */}
-                        <div className="badge-neon px-8 py-4 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border-purple-500/40 text-purple-300 font-bold text-lg">
-                            User Query
-                        </div>
 
-                        {/* Agents Layer */}
-                        <div className="grid grid-cols-3 md:grid-cols-6 gap-6">
-                            {["Clinical", "Genomics", "Research", "Market", "Patent", "Safety"].map((agent) => (
-                                <div key={agent} className="flex flex-col items-center gap-3">
-                                    <ArrowRight className="w-5 h-5 text-cyan-400 rotate-90 icon-glow" />
-                                    <div className="badge-neon px-4 py-3 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border-cyan-500/40 text-cyan-300 text-sm font-bold">
-                                        {agent}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                {/* Visualization Tabs */}
+                <div className="flex flex-wrap gap-2 mb-6">
+                    {[
+                        { id: 'workflow', label: 'Agent Workflow', icon: Activity },
+                        { id: 'relationships', label: 'Drug Network', icon: Network },
+                        { id: 'analytics', label: 'Data Analytics', icon: BarChart3 },
+                    ].map((tab) => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all ${
+                                activeTab === tab.id
+                                    ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/50'
+                                    : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                            }`}
+                        >
+                            <tab.icon className="w-4 h-4" />
+                            {tab.label}
+                        </button>
+                    ))}
+                </div>
 
-                        {/* Convergence */}
-                        <div className="flex flex-col items-center gap-4">
-                            <div className="grid grid-cols-6 gap-3">
-                                {[...Array(6)].map((_, i) => (
-                                    <ArrowRight key={i} className="w-5 h-5 text-emerald-400 rotate-90 icon-glow" />
-                                ))}
-                            </div>
-                            <div className="badge-neon px-10 py-5 bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border-emerald-500/40 text-emerald-300 font-black text-2xl glow-pulse">
-                                {xaiData.drug}
+                {/* Tab Content */}
+                <div className="min-h-[600px]">
+                    {activeTab === 'workflow' && (
+                        <div className="space-y-4">
+                            <h4 className="text-lg font-bold text-white">Agent Execution Workflow</h4>
+                            <AgentWorkflowGraph agentStatus={agentStatus} />
+                        </div>
+                    )}
+
+                    {activeTab === 'relationships' && (
+                        <div className="space-y-4">
+                            <h4 className="text-lg font-bold text-white">Drug-Target-Pathway Network</h4>
+                            <DrugRelationshipGraph candidates={candidates} />
+                        </div>
+                    )}
+
+                    {activeTab === 'analytics' && (
+                        <div className="space-y-6">
+                            <h4 className="text-lg font-bold text-white">Data Analytics Dashboard</h4>
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                <CandidateScoreChart candidates={candidates} />
+                                <DataSourceDistribution candidates={candidates} />
+                                <AgentPerformanceRadar agentStatus={agentStatus} />
+                                <ScoreVsMarketChart candidates={candidates} />
                             </div>
                         </div>
-                    </div>
-                    <p className="text-center text-gray-400 text-sm mt-8 font-semibold">
+                    )}
+                </div>
+                
+                <p className="text-center text-gray-400 text-sm mt-8 font-semibold">
                         6 specialized agents analyzed in parallel and converged on this candidate
                     </p>
                 </div>

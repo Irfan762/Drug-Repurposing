@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { TrendingUp, FileText, Download, ExternalLink, Database, Sparkles, Search, Award, Target } from 'lucide-react';
+import { TrendingUp, FileText, Download, ExternalLink, Database, Sparkles, Search, Award, Target, BarChart3 } from 'lucide-react';
 import { jobsApi } from '../services/api';
 import { saveJobToHistory } from '../services/localStorage';
 import { DataSourceBadge } from '../components/DataSourceBadge';
+import { CandidateScoreChart, DataSourceDistribution } from '../components/DataAnalyticsCharts';
 
 export default function Candidates() {
     const location = useLocation();
@@ -201,6 +202,12 @@ export default function Candidates() {
                     ))}
                 </div>
             )}
+
+            {/* Analytics Charts */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <CandidateScoreChart candidates={candidates} />
+                <DataSourceDistribution candidates={candidates} />
+            </div>
 
             {/* Candidates List */}
             <div className="space-y-6">

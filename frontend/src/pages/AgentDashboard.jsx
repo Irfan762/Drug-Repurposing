@@ -348,14 +348,24 @@ export default function AgentDashboard() {
                             {allCompleted && ' Ready to view ranked candidates.'}
                         </p>
                     </div>
-                    <button
-                        onClick={() => navigate('/candidates', { state: { jobId } })}
-                        className="btn-neon flex items-center gap-4 mx-auto text-xl px-10 py-5"
-                    >
-                        <FileText className="w-7 h-7" />
-                        View Results & Export FDA-21 Report
-                        <Sparkles className="w-6 h-6" />
-                    </button>
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                        <button
+                            onClick={() => navigate('/candidates', { state: { jobId } })}
+                            className="btn-neon flex items-center gap-4 text-xl px-10 py-5"
+                        >
+                            <FileText className="w-7 h-7" />
+                            View Results & Export FDA-21 Report
+                            <Sparkles className="w-6 h-6" />
+                        </button>
+                        <button
+                            onClick={() => navigate('/explainability', { state: { jobId } })}
+                            className="btn-premium flex items-center gap-4 text-xl px-10 py-5"
+                        >
+                            <TrendingUp className="w-7 h-7" />
+                            Interactive Visualizations
+                            <CheckCircle2 className="w-6 h-6" />
+                        </button>
+                    </div>
                 </div>
             )}
         </div>

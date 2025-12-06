@@ -14,6 +14,18 @@ router = APIRouter()
 async def test_jobs_endpoint():
     return {"message": "Jobs endpoint is working!", "available_endpoints": ["/query", "/test"]}
 
+@router.get("/test-csv")
+async def test_csv_data():
+    """Test endpoint to verify CSV data is loaded"""
+    from app.services.agents.csv_agents import DRUGS_DATABASE, RESEARCH_PAPERS, CLINICAL_TRIALS, PATENTS_DATABASE
+    return {
+        "drugs_count": len(DRUGS_DATABASE),
+        "papers_count": len(RESEARCH_PAPERS), 
+        "trials_count": len(CLINICAL_TRIALS),
+        "patents_count": len(PATENTS_DATABASE),
+        "sample_drug": DRUGS_DATABASE[0] if DRUGS_DATABASE else None
+    }
+
 # CSV-Based Real Agent Orchestration
 from app.services.agents.csv_agents import orchestrate_csv_agents, aggregate_csv_results, get_agent_progress
 
@@ -105,30 +117,41 @@ async def get_job_status(job_id: str) -> Any:
 
 @router.get("/{job_id}/results", response_model=JobResultsResponse)
 async def get_job_results(job_id: str) -> Any:
+    print(f"[RESULTS] Fetching results for job {job_id}")
+    print(f"[RESULTS] Available jobs in store: {list(JOB_RESULTS_STORE.keys())}")
+    
     # Try to get results from store first
     result = JOB_RESULTS_STORE.get(job_id)
     
-    # If not found, run a demo query
+    # If not found, check if job is still running
     if not result:
+        print(f"[RESULTS] No results found for {job_id}, running demo query...")
         agent_results = await orchestrate_csv_agents("Find kinase inhibitors for neurodegenerative diseases", job_id)
         result = await aggregate_csv_results(agent_results, "Find kinase inhibitors for neurodegenerative diseases")
+        # Store the demo results
+        JOB_RESULTS_STORE[job_id] = result
+    else:
+        print(f"[RESULTS] Found stored results for {job_id} with {len(result.get('candidates', []))} candidates")
     
     candidates_data = result.get("candidates", [])
+    print(f"[RESULTS] Processing {len(candidates_data)} candidates")
     
     # Transform to API schema
     formatted_candidates = []
     for c in candidates_data:
-        formatted_candidates.append({
-            "id": c["id"],
-            "drug": c["drug"],
-            "score": c["score"],
-            "summary": c["summary"],
+        formatted_candidate = {
+            "id": c.get("id", 0),
+            "drug": c.get("drug", "Unknown Drug"),
+            "score": c.get("score", 0.0),
+            "summary": c.get("summary", "No summary available"),
             "sources": c.get("sources", []),
             "patentFlags": c.get("patentFlags", []),
-            "marketEstimate": c.get("marketEstimate"),
+            "marketEstimate": c.get("marketEstimate", "Not available"),
             "safetyFlags": c.get("safetyFlags", []),
-            "rationale": c.get("rationale")
-        })
+            "rationale": c.get("rationale", "No rationale provided")
+        }
+        formatted_candidates.append(formatted_candidate)
+        print(f"[RESULTS] Formatted candidate: {formatted_candidate['drug']} (score: {formatted_candidate['score']})")
     
     # Full XAI explanation
     explanation = {
