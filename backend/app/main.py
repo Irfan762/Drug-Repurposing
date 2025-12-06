@@ -22,14 +22,13 @@ app = FastAPI(
 )
 
 # Set all CORS enabled origins
-if settings.BACKEND_CORS_ORIGINS:
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=[str(origin) for origin in settings.BACKEND_CORS_ORIGINS],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins for now
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
@@ -40,3 +39,7 @@ def health_check():
 @app.get("/")
 def root():
     return {"message": "Welcome to EYAI Drug Repurposing API"}
+
+@app.get("/api/v1/test")
+def test_endpoint():
+    return {"message": "Backend is working!", "agents_loaded": True}

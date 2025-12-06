@@ -6,7 +6,13 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
     
     # CORS
-    BACKEND_CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:5173", "http://localhost"]
+    BACKEND_CORS_ORIGINS: List[str] = [
+        "http://localhost:3000", 
+        "http://localhost:5173", 
+        "http://localhost",
+        "https://drug-repurposing-frontend.onrender.com",
+        "https://*.onrender.com"
+    ]
 
     # Database
     POSTGRES_SERVER: str = "db"
