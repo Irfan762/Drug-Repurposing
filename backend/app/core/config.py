@@ -20,6 +20,10 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8  # 8 days
 
+    # Server Configuration (optional, have defaults)
+    LOG_LEVEL: str = "info"
+    PORT: int = 8000
+
     # Redis / Celery
     REDIS_HOST: str = "redis"
     REDIS_PORT: int = 6379
@@ -36,5 +40,6 @@ class Settings(BaseSettings):
 
     class Config:
         env_file = ".env"
+        extra = "ignore"  # Ignore extra environment variables
 
 settings = Settings()
