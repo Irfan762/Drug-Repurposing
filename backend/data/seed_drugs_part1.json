@@ -1,0 +1,186 @@
+[
+    {
+        "id": 1,
+        "drugName": "Metformin",
+        "fdaApprovalDate": "1994-12-29",
+        "primaryIndication": "Type 2 Diabetes",
+        "mechanism": "AMPK activation, mTOR inhibition",
+        "knownTargets": [
+            "AMPK",
+            "Complex I"
+        ],
+        "adverseEvents": [
+            "GI distress",
+            "Lactic acidosis (rare)"
+        ],
+        "pkSummary": "Oral bioavailability ~50-60%, Half-life 4-8 hours",
+        "patentStatus": "Expired",
+        "marketValue": "$2.3B annually"
+    },
+    {
+        "id": 2,
+        "drugName": "Sildenafil",
+        "fdaApprovalDate": "1998-03-27",
+        "primaryIndication": "Erectile Dysfunction, Pulmonary Hypertension",
+        "mechanism": "PDE5 inhibition",
+        "knownTargets": [
+            "PDE5"
+        ],
+        "adverseEvents": [
+            "Headache",
+            "Flushing",
+            "Visual disturbances"
+        ],
+        "pkSummary": "Oral bioavailability ~40%, Half-life 3-5 hours",
+        "patentStatus": "Expired (2020)",
+        "marketValue": "$1.8B annually"
+    },
+    {
+        "id": 3,
+        "drugName": "Thalidomide",
+        "fdaApprovalDate": "1998-07-16",
+        "primaryIndication": "Multiple Myeloma, Leprosy",
+        "mechanism": "Immunomodulation, anti-angiogenic",
+        "knownTargets": [
+            "CRBN",
+            "TNF-α"
+        ],
+        "adverseEvents": [
+            "Teratogenicity",
+            "Peripheral neuropathy",
+            "DVT"
+        ],
+        "pkSummary": "Variable absorption, Half-life 5-7 hours",
+        "patentStatus": "Active",
+        "marketValue": "$900M annually"
+    },
+    {
+        "id": 4,
+        "drugName": "Aspirin",
+        "fdaApprovalDate": "1950-01-01",
+        "primaryIndication": "Pain, Inflammation, Cardiovascular Protection",
+        "mechanism": "COX-1/COX-2 inhibition",
+        "knownTargets": [
+            "COX-1",
+            "COX-2"
+        ],
+        "adverseEvents": [
+            "GI bleeding",
+            "Tinnitus"
+        ],
+        "pkSummary": "Rapid absorption, Half-life 15-20 minutes (aspirin), 2-3 hours (salicylate)",
+        "patentStatus": "Public domain",
+        "marketValue": "$1.2B annually"
+    },
+    {
+        "id": 5,
+        "drugName": "Propranolol",
+        "fdaApprovalDate": "1967-11-13",
+        "primaryIndication": "Hypertension, Angina, Arrhythmias",
+        "mechanism": "β-adrenergic receptor antagonist",
+        "knownTargets": [
+            "β1",
+            "β2 receptors"
+        ],
+        "adverseEvents": [
+            "Bradycardia",
+            "Fatigue",
+            "Bronchospasm"
+        ],
+        "pkSummary": "Extensive first-pass metabolism, Half-life 3-6 hours",
+        "patentStatus": "Expired",
+        "marketValue": "$450M annually"
+    },
+    {
+        "id": 6,
+        "drugName": "Raloxifene",
+        "fdaApprovalDate": "1997-12-10",
+        "primaryIndication": "Osteoporosis, Breast Cancer Prevention",
+        "mechanism": "Selective estrogen receptor modulator",
+        "knownTargets": [
+            "ER-α",
+            "ER-β"
+        ],
+        "adverseEvents": [
+            "Hot flashes",
+            "DVT risk"
+        ],
+        "pkSummary": "Rapid absorption, Half-life 27-32 hours",
+        "patentStatus": "Expired (2014)",
+        "marketValue": "$680M annually"
+    },
+    {
+        "id": 7,
+        "drugName": "Valproic Acid",
+        "fdaApprovalDate": "1978-02-28",
+        "primaryIndication": "Epilepsy, Bipolar Disorder, Migraine",
+        "mechanism": "HDAC inhibition, GABA enhancement",
+        "knownTargets": [
+            "HDAC",
+            "GABA"
+        ],
+        "adverseEvents": [
+            "Hepatotoxicity",
+            "Teratogenicity",
+            "Weight gain"
+        ],
+        "pkSummary": "Complete absorption, Half-life 9-16 hours",
+        "patentStatus": "Expired",
+        "marketValue": "$1.1B annually"
+    },
+    {
+        "id": 8,
+        "drugName": "Losartan",
+        "fdaApprovalDate": "1995-04-14",
+        "primaryIndication": "Hypertension, Diabetic Nephropathy",
+        "mechanism": "Angiotensin II receptor antagonist",
+        "knownTargets": [
+            "AT1 receptor"
+        ],
+        "adverseEvents": [
+            "Dizziness",
+            "Hyperkalemia"
+        ],
+        "pkSummary": "Oral bioavailability ~33%, Half-life 2 hours (6-9 hours for active metabolite)",
+        "patentStatus": "Expired (2010)",
+        "marketValue": "$2.1B annually"
+    },
+    {
+        "id": 9,
+        "drugName": "Donepezil",
+        "fdaApprovalDate": "1996-11-25",
+        "primaryIndication": "Alzheimer's Disease",
+        "mechanism": "Acetylcholinesterase inhibition",
+        "knownTargets": [
+            "AChE"
+        ],
+        "adverseEvents": [
+            "Nausea",
+            "Diarrhea",
+            "Insomnia"
+        ],
+        "pkSummary": "Well absorbed, Half-life 70 hours",
+        "patentStatus": "Expired (2010)",
+        "marketValue": "$1.4B annually"
+    },
+    {
+        "id": 10,
+        "drugName": "Imatinib",
+        "fdaApprovalDate": "2001-05-10",
+        "primaryIndication": "Chronic Myeloid Leukemia",
+        "mechanism": "BCR-ABL tyrosine kinase inhibition",
+        "knownTargets": [
+            "BCR-ABL",
+            "c-KIT",
+            "PDGFR"
+        ],
+        "adverseEvents": [
+            "Edema",
+            "Nausea",
+            "Muscle cramps"
+        ],
+        "pkSummary": "Oral bioavailability ~98%, Half-life 18 hours",
+        "patentStatus": "Expired (2015)",
+        "marketValue": "$4.7B peak"
+    }
+]

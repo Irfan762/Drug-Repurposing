@@ -1,0 +1,272 @@
+[
+    {
+        "id": 11,
+        "drugName": "Rituximab",
+        "fdaApprovalDate": "1997-11-26",
+        "primaryIndication": "Non-Hodgkin Lymphoma, Rheumatoid Arthritis",
+        "mechanism": "Anti-CD20 monoclonal antibody",
+        "knownTargets": [
+            "CD20"
+        ],
+        "adverseEvents": [
+            "Infusion reactions",
+            "Infections",
+            "Progressive multifocal leukoencephalopathy"
+        ],
+        "pkSummary": "IV administration, Half-life ~22 days",
+        "patentStatus": "Biosimilars available (2019)",
+        "marketValue": "$7.5B annually"
+    },
+    {
+        "id": 12,
+        "drugName": "Atorvastatin",
+        "fdaApprovalDate": "1996-12-17",
+        "primaryIndication": "Hypercholesterolemia, Cardiovascular Disease Prevention",
+        "mechanism": "HMG-CoA reductase inhibition",
+        "knownTargets": [
+            "HMG-CoA reductase"
+        ],
+        "adverseEvents": [
+            "Myalgia",
+            "Hepatotoxicity (rare)",
+            "Rhabdomyolysis (rare)"
+        ],
+        "pkSummary": "Oral bioavailability ~14%, Half-life 14 hours",
+        "patentStatus": "Expired (2011)",
+        "marketValue": "$12.9B peak"
+    },
+    {
+        "id": 13,
+        "drugName": "Warfarin",
+        "fdaApprovalDate": "1954-02-12",
+        "primaryIndication": "Anticoagulation, DVT/PE Prevention",
+        "mechanism": "Vitamin K epoxide reductase inhibition",
+        "knownTargets": [
+            "VKORC1"
+        ],
+        "adverseEvents": [
+            "Bleeding",
+            "Skin necrosis (rare)"
+        ],
+        "pkSummary": "Complete absorption, Half-life 20-60 hours",
+        "patentStatus": "Public domain",
+        "marketValue": "$500M annually"
+    },
+    {
+        "id": 14,
+        "drugName": "Acyclovir",
+        "fdaApprovalDate": "1982-03-29",
+        "primaryIndication": "Herpes Simplex, Varicella Zoster",
+        "mechanism": "Viral DNA polymerase inhibition",
+        "knownTargets": [
+            "Viral thymidine kinase"
+        ],
+        "adverseEvents": [
+            "Nausea",
+            "Headache",
+            "Renal dysfunction (IV)"
+        ],
+        "pkSummary": "Oral bioavailability ~15-30%, Half-life 2.5-3 hours",
+        "patentStatus": "Expired",
+        "marketValue": "$380M annually"
+    },
+    {
+        "id": 15,
+        "drugName": "Tamoxifen",
+        "fdaApprovalDate": "1977-12-30",
+        "primaryIndication": "Breast Cancer",
+        "mechanism": "Selective estrogen receptor modulator",
+        "knownTargets": [
+            "ER-α"
+        ],
+        "adverseEvents": [
+            "Hot flashes",
+            "Endometrial cancer risk",
+            "DVT"
+        ],
+        "pkSummary": "Well absorbed, Half-life 5-7 days",
+        "patentStatus": "Expired",
+        "marketValue": "$600M annually"
+    },
+    {
+        "id": 16,
+        "drugName": "Furosemide",
+        "fdaApprovalDate": "1966-07-01",
+        "primaryIndication": "Edema, Heart Failure, Hypertension",
+        "mechanism": "Loop diuretic (Na-K-2Cl cotransporter inhibition)",
+        "knownTargets": [
+            "NKCC2"
+        ],
+        "adverseEvents": [
+            "Hypokalemia",
+            "Ototoxicity",
+            "Dehydration"
+        ],
+        "pkSummary": "Oral bioavailability ~60%, Half-life 1.5-2 hours",
+        "patentStatus": "Expired",
+        "marketValue": "$250M annually"
+    },
+    {
+        "id": 17,
+        "drugName": "Allopurinol",
+        "fdaApprovalDate": "1966-08-19",
+        "primaryIndication": "Gout, Hyperuricemia",
+        "mechanism": "Xanthine oxidase inhibition",
+        "knownTargets": [
+            "XO"
+        ],
+        "adverseEvents": [
+            "Rash",
+            "Stevens-Johnson syndrome (rare)",
+            "Hepatotoxicity"
+        ],
+        "pkSummary": "Oral bioavailability ~80%, Half-life 1-2 hours (18-30 hours for oxypurinol)",
+        "patentStatus": "Expired",
+        "marketValue": "$180M annually"
+    },
+    {
+        "id": 18,
+        "drugName": "Fluoxetine",
+        "fdaApprovalDate": "1987-12-29",
+        "primaryIndication": "Depression, OCD, Bulimia",
+        "mechanism": "Selective serotonin reuptake inhibition",
+        "knownTargets": [
+            "SERT"
+        ],
+        "adverseEvents": [
+            "Insomnia",
+            "Nausea",
+            "Sexual dysfunction"
+        ],
+        "pkSummary": "Well absorbed, Half-life 1-3 days (4-6 days for norfluoxetine)",
+        "patentStatus": "Expired (2001)",
+        "marketValue": "$2.8B peak"
+    },
+    {
+        "id": 19,
+        "drugName": "Omeprazole",
+        "fdaApprovalDate": "1989-09-19",
+        "primaryIndication": "GERD, Peptic Ulcer",
+        "mechanism": "Proton pump inhibition",
+        "knownTargets": [
+            "H+/K+-ATPase"
+        ],
+        "adverseEvents": [
+            "Headache",
+            "Diarrhea",
+            "Increased infection risk (long-term)"
+        ],
+        "pkSummary": "Rapid absorption, Half-life 0.5-1 hour",
+        "patentStatus": "Expired (2001)",
+        "marketValue": "$5.7B peak"
+    },
+    {
+        "id": 20,
+        "drugName": "Sertraline",
+        "fdaApprovalDate": "1991-12-30",
+        "primaryIndication": "Depression, Anxiety, PTSD",
+        "mechanism": "Selective serotonin reuptake inhibition",
+        "knownTargets": [
+            "SERT"
+        ],
+        "adverseEvents": [
+            "Nausea",
+            "Diarrhea",
+            "Sexual dysfunction"
+        ],
+        "pkSummary": "Variable absorption, Half-life 26 hours",
+        "patentStatus": "Expired (2006)",
+        "marketValue": "$3.3B peak"
+    },
+    {
+        "id": 21,
+        "drugName": "Celecoxib",
+        "fdaApprovalDate": "1998-12-31",
+        "primaryIndication": "Arthritis, Pain",
+        "mechanism": "Selective COX-2 inhibition",
+        "knownTargets": [
+            "COX-2"
+        ],
+        "adverseEvents": [
+            "Cardiovascular events",
+            "GI bleeding",
+            "Renal dysfunction"
+        ],
+        "pkSummary": "Oral bioavailability unknown, Half-life 11 hours",
+        "patentStatus": "Expired (2014)",
+        "marketValue": "$3.1B peak"
+    },
+    {
+        "id": 22,
+        "drugName": "Montelukast",
+        "fdaApprovalDate": "1998-02-20",
+        "primaryIndication": "Asthma, Allergic Rhinitis",
+        "mechanism": "Leukotriene receptor antagonist",
+        "knownTargets": [
+            "CysLT1"
+        ],
+        "adverseEvents": [
+            "Headache",
+            "Abdominal pain",
+            "Neuropsychiatric events"
+        ],
+        "pkSummary": "Rapid absorption, Half-life 2.7-5.5 hours",
+        "patentStatus": "Expired (2012)",
+        "marketValue": "$5.5B peak"
+    },
+    {
+        "id": 23,
+        "drugName": "Amlodipine",
+        "fdaApprovalDate": "1987-07-31",
+        "primaryIndication": "Hypertension, Angina",
+        "mechanism": "Calcium channel blocker",
+        "knownTargets": [
+            "L-type Ca2+ channels"
+        ],
+        "adverseEvents": [
+            "Peripheral edema",
+            "Flushing",
+            "Headache"
+        ],
+        "pkSummary": "Oral bioavailability ~64-90%, Half-life 30-50 hours",
+        "patentStatus": "Expired (2007)",
+        "marketValue": "$1.5B annually"
+    },
+    {
+        "id": 24,
+        "drugName": "Levothyroxine",
+        "fdaApprovalDate": "2002-08-06",
+        "primaryIndication": "Hypothyroidism",
+        "mechanism": "Thyroid hormone replacement",
+        "knownTargets": [
+            "TRα",
+            "TRβ"
+        ],
+        "adverseEvents": [
+            "Tachycardia",
+            "Anxiety",
+            "Osteoporosis (high doses)"
+        ],
+        "pkSummary": "Oral bioavailability ~70-80%, Half-life 7 days",
+        "patentStatus": "Generic",
+        "marketValue": "$1.8B annually"
+    },
+    {
+        "id": 25,
+        "drugName": "Lisinopril",
+        "fdaApprovalDate": "1987-12-29",
+        "primaryIndication": "Hypertension, Heart Failure",
+        "mechanism": "ACE inhibition",
+        "knownTargets": [
+            "ACE"
+        ],
+        "adverseEvents": [
+            "Cough",
+            "Hyperkalemia",
+            "Angioedema"
+        ],
+        "pkSummary": "Oral bioavailability ~25%, Half-life 12 hours",
+        "patentStatus": "Expired (2002)",
+        "marketValue": "$2.2B annually"
+    }
+]
