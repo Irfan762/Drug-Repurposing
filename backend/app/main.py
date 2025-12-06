@@ -30,7 +30,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(api_router, prefix=settings.API_V1_STR)
+# Temporarily disable API router to test direct endpoint
+# app.include_router(api_router, prefix=settings.API_V1_STR)
 
 @app.get("/health")
 def health_check():
@@ -50,6 +51,11 @@ class JobRequest(BaseModel):
     prompt: str
     databases: list = []
     options: dict = {}
+
+@app.get("/api/v1/jobs/query")
+async def test_job_endpoint():
+    """Test endpoint to verify route is working"""
+    return {"message": "Job endpoint is accessible", "method": "GET"}
 
 @app.post("/api/v1/jobs/query")
 async def create_job_simple(job_data: JobRequest):
