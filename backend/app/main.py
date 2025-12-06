@@ -44,17 +44,4 @@ def root():
 def test_endpoint():
     return {"message": "Backend is working!", "agents_loaded": True}
 
-@app.post("/api/v1/jobs/query")
-async def create_job_direct(job_data: dict):
-    """Direct job creation endpoint for testing"""
-    import uuid
-    from app.services.agents.csv_agents import orchestrate_csv_agents
-    
-    job_id = str(uuid.uuid4())
-    
-    # Start the agents in background (simplified for testing)
-    try:
-        # For now, just return the job ID immediately
-        return {"jobId": job_id, "status": "PENDING"}
-    except Exception as e:
-        return {"error": str(e)}
+# Removed duplicate endpoint - using the one in jobs router instead
