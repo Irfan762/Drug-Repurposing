@@ -3,8 +3,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.api.v1.api import api_router
 from prometheus_client import make_wsgi_app
+from pydantic import BaseModel
 
 from contextlib import asynccontextmanager
+
+class JobRequest(BaseModel):
+    prompt: str
+    databases: list = []
+    options: dict = {}
 from app.db.session import engine
 from app.models.sql_models import Base
 
@@ -63,12 +69,7 @@ def test_endpoint():
 def test_create_endpoint():
     return {"message": "Create endpoint exists", "method": "GET", "note": "Use POST to create jobs"}
 
-from pydantic import BaseModel
-
-class JobRequest(BaseModel):
-    prompt: str
-    databases: list = []
-    options: dict = {}
+# Moved JobRequest class to top of file
 
 @app.post("/api/v1/jobs/create")
 async def create_job_new_route(job_data: JobRequest):
