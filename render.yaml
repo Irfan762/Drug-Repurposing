@@ -1,0 +1,28 @@
+services:
+  # Frontend Service
+  - type: web
+    name: drug-repurposing-frontend
+    env: docker
+    dockerfilePath: ./frontend/Dockerfile
+    dockerContext: ./frontend
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: VITE_API_URL
+        value: https://drug-repurposing-backend.onrender.com
+    
+  # Backend Service
+  - type: web
+    name: drug-repurposing-backend
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: CORS_ORIGINS
+        value: https://drug-repurposing-frontend.onrender.com
