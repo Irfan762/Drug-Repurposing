@@ -165,6 +165,14 @@ curl https://your-app.onrender.com/health
 **Check nginx Logs**
 - In Render Dashboard: Logs → View nginx access logs
 
+### Issue: Nginx Backend Proxy Error
+
+**Error**: `host not found in upstream "backend"`
+
+**Solution**: Frontend and backend are deployed separately on Render, so no nginx proxy is needed. The frontend makes direct API calls using `VITE_API_URL`.
+
+**Fixed**: Removed backend proxy from nginx.conf
+
 ### Issue: App Loads but API Calls Fail
 
 **Check CORS Configuration**
@@ -181,6 +189,8 @@ CORS_ORIGINS = [
 // frontend/.env
 VITE_API_URL=https://your-backend.onrender.com
 ```
+
+**Important**: Make sure to set `VITE_API_URL` as an environment variable in Render dashboard before building!
 
 ### Issue: Deployment Timeout
 
