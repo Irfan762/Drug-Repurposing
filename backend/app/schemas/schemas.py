@@ -71,8 +71,10 @@ class JobResponse(BaseModel):
 class AgentStatus(BaseModel):
     agent: str
     state: str
-    startedAt: Optional[str]
-    finishedAt: Optional[str]
+    progress: Optional[int] = 0
+    task: Optional[str] = "Waiting..."
+    startedAt: Optional[str] = None
+    finishedAt: Optional[str] = None
 
 class JobStatusResponse(BaseModel):
     status: JobStatusEnum

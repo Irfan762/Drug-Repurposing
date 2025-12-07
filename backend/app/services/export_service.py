@@ -155,20 +155,64 @@ def generate_fda21_pdf(job_id: str, prompt: str, candidates: List[Dict[str, Any]
     story.append(PageBreak())
     
     # === METHODOLOGY ===
-    story.append(Paragraph("Methodology & Agent Outputs", heading_style))
+    story.append(Paragraph("Methodology & Agent Workflow", heading_style))
     story.append(Spacer(1, 12))
     
     methodology_text = """
-    <b>7-Agent AI System:</b><br/>
-    1. <b>Master Agent:</b> Query decomposition and orchestration<br/>
-    2. <b>Clinical Agent:</b> Clinical trials analysis (ClinicalTrials.gov, PubMed)<br/>
-    3. <b>Genomics Agent:</b> Protein interactions, AlphaFold2 predictions<br/>
-    4. <b>Research Agent:</b> Literature mining (PubMed, Semantic Scholar)<br/>
-    5. <b>Market Agent:</b> Commercial analysis (IQVIA, market data)<br/>
-    6. <b>IP/Patent Agent:</b> Freedom-to-operate analysis (USPTO, EPO)<br/>
-    7. <b>Safety Agent:</b> Toxicity assessment (FDA AERS, ToxCast)<br/>
+    <b>6-Agent AI System Architecture:</b><br/>
     <br/>
-    All agents executed in parallel with structured event emission and evidence tracking.
+    <b>Agent Workflow Diagram:</b><br/>
+    <br/>
+    <font face="Courier">
+    ┌─────────────────────────────────────────────────────────────┐<br/>
+    │                      USER QUERY                              │<br/>
+    │         "Find kinase inhibitors for Alzheimer's"            │<br/>
+    └──────────────────────┬──────────────────────────────────────┘<br/>
+                           │<br/>
+                           ▼<br/>
+    ┌─────────────────────────────────────────────────────────────┐<br/>
+    │                  MASTER ORCHESTRATOR                         │<br/>
+    │         Query Decomposition & Task Distribution             │<br/>
+    └──────────────────────┬──────────────────────────────────────┘<br/>
+                           │<br/>
+           ┌───────────────┼───────────────┐<br/>
+           │               │               │<br/>
+           ▼               ▼               ▼<br/>
+    ┌──────────┐    ┌──────────┐    ┌──────────┐<br/>
+    │ Clinical │    │ Genomics │    │ Research │<br/>
+    │  Agent   │    │  Agent   │    │  Agent   │<br/>
+    └────┬─────┘    └────┬─────┘    └────┬─────┘<br/>
+         │               │               │<br/>
+         │               ▼               │<br/>
+         │        ┌──────────┐          │<br/>
+         │        │  Market  │          │<br/>
+         │        │  Agent   │          │<br/>
+         │        └────┬─────┘          │<br/>
+         │             │                │<br/>
+         ▼             ▼                ▼<br/>
+    ┌──────────┐    ┌──────────┐    ┌──────────┐<br/>
+    │  Patent  │    │  Safety  │    │ Evidence │<br/>
+    │  Agent   │    │  Agent   │    │Aggregator│<br/>
+    └────┬─────┘    └────┬─────┘    └────┬─────┘<br/>
+         │               │               │<br/>
+         └───────────────┴───────────────┘<br/>
+                         │<br/>
+                         ▼<br/>
+    ┌─────────────────────────────────────────────────────────────┐<br/>
+    │              RANKED DRUG CANDIDATES                          │<br/>
+    │         With Evidence, Scores & Rationale                   │<br/>
+    └─────────────────────────────────────────────────────────────┘<br/>
+    </font>
+    <br/>
+    <b>Agent Descriptions:</b><br/>
+    1. <b>Clinical Agent:</b> Analyzes clinical trials from ClinicalTrials.gov and PubMed<br/>
+    2. <b>Genomics Agent:</b> Evaluates protein interactions and AlphaFold2 predictions<br/>
+    3. <b>Research Agent:</b> Mines research literature from PubMed and Semantic Scholar<br/>
+    4. <b>Market Agent:</b> Assesses commercial viability using IQVIA market data<br/>
+    5. <b>Patent Agent:</b> Analyzes freedom-to-operate using USPTO and EPO databases<br/>
+    6. <b>Safety Agent:</b> Reviews toxicity profiles from FDA AERS and ToxCast<br/>
+    <br/>
+    All agents execute in parallel with real-time progress tracking and structured event emission.
     """
     story.append(Paragraph(methodology_text, styles['Normal']))
     story.append(Spacer(1, 24))

@@ -7,6 +7,9 @@ export function AgentStatusCard({ name, status, task, progress }) {
     const isError = status === 'error';
     const isPending = status === 'pending';
     const isCompleted = status === 'completed';
+    
+    // Ensure completed agents show 100% progress
+    const displayProgress = isCompleted ? 100 : (progress || 0);
 
     return (
         <motion.div
@@ -42,11 +45,12 @@ export function AgentStatusCard({ name, status, task, progress }) {
             </div>
 
             <div className="space-y-4">
-                <div className="flex justify-between text-sm">
+                <div className="flex flex-col gap-2 text-sm">
                     <span className="text-gray-400 font-semibold">Current Task</span>
-                    <span className={clsx("font-bold truncate max-w-[150px]",
+                    <span className={clsx("font-bold text-xs leading-relaxed",
                         isError ? "text-red-400" :
                             isPending ? "text-yellow-400" :
+                                isCompleted ? "text-emerald-400" :
                                 "text-white")}>
                         {task}
                     </span>
@@ -57,15 +61,19 @@ export function AgentStatusCard({ name, status, task, progress }) {
                         className={clsx("h-full rounded-full transition-all duration-500",
                             isError ? "bg-gradient-to-r from-red-500 to-red-600" :
                                 isPending ? "bg-gradient-to-r from-yellow-500/50 to-yellow-600/50" :
-                                    isCompleted ? "bg-gradient-to-r from-emerald-500 to-teal-500" :
+                                    isCompleted ? "bg-gradient-to-r from-emerald-500 to-teal-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" :
                                         "progress-neon"
                         )}
-                        style={{ width: `${progress}%` }}
+                        style={{ width: `${displayProgress}%` }}
+                        role="progressbar"
+                        aria-valuenow={displayProgress}
+                        aria-valuemin="0"
+                        aria-valuemax="100"
                     />
                 </div>
 
                 <div className="flex justify-between text-xs">
-                    <span className="text-gray-400 font-semibold">{progress}% complete</span>
+                    <span className="text-gray-400 font-semibold">{displayProgress}% complete</span>
                     {isRunning && <span className="text-purple-400 font-bold animate-pulse">Processing...</span>}
                     {isPending && <span className="text-yellow-400 font-bold">Queued</span>}
                     {isCompleted && <span className="text-emerald-400 font-bold">✓ Done</span>}

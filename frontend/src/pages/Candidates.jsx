@@ -49,6 +49,8 @@ export default function Candidates() {
 
         setIsExporting(true);
         try {
+            console.log('[EXPORT] Starting export for job:', jobId);
+            
             const response = await fetch(`/api/v1/jobs/${jobId}/export`, {
                 method: 'POST',
                 headers: {
@@ -60,11 +62,23 @@ export default function Candidates() {
                 })
             });
 
+            console.log('[EXPORT] Response status:', response.status);
+
             if (!response.ok) {
-                throw new Error('Export failed');
+                const errorText = await response.text();
+                console.error('[EXPORT] Error response:', errorText);
+                throw new Error(`Export failed: ${errorText}`);
             }
 
             const blob = await response.blob();
+            console.log('[EXPORT] Blob received, size:', blob.size, 'type:', blob.type);
+            
+            if (blob.size < 1000) {
+                const text = await blob.text();
+                console.error('[EXPORT] Small blob, might be error:', text);
+                throw new Error('PDF generation failed: ' + text);
+            }
+            
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -76,8 +90,8 @@ export default function Candidates() {
 
             alert('FDA-21 Report downloaded successfully!');
         } catch (err) {
-            console.error("Export failed:", err);
-            alert("Failed to generate export. Please try again.");
+            console.error("[EXPORT] Export failed:", err);
+            alert(`Failed to generate export: ${err.message}`);
         } finally {
             setIsExporting(false);
         }

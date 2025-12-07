@@ -79,8 +79,11 @@ export default function FDAExport() {
 
         setIsExporting(true);
         try {
+            // Use a demo job ID for export (backend will generate demo data)
+            const jobId = 'demo-export-' + Date.now();
+            
             if (selectedFormats.includes('pdf')) {
-                const response = await fetch(`/api/v1/jobs/${selectedJob.id.replace('#', '')}/export`, {
+                const response = await fetch(`/api/v1/jobs/${jobId}/export`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -93,33 +96,46 @@ export default function FDAExport() {
 
                 if (response.ok) {
                     const blob = await response.blob();
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `FDA21_Report_${selectedJob.id}.pdf`;
-                    document.body.appendChild(a);
-                    a.click();
-                    window.URL.revokeObjectURL(url);
-                    document.body.removeChild(a);
+                    
+                    // Check if it's actually a PDF
+                    if (blob.type === 'application/pdf' || blob.size > 1000) {
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `FDA21_Report_${selectedJob.id}.pdf`;
+                        document.body.appendChild(a);
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+                        document.body.removeChild(a);
 
-                    const newExport = {
-                        id: `EXP${Date.now()}`,
-                        jobId: selectedJob.id,
-                        format: 'PDF',
-                        timestamp: new Date().toLocaleString(),
-                        size: `${(blob.size / (1024 * 1024)).toFixed(1)} MB`
-                    };
+                        const newExport = {
+                            id: `EXP${Date.now()}`,
+                            jobId: selectedJob.id,
+                            format: 'PDF',
+                            timestamp: new Date().toLocaleString(),
+                            size: `${(blob.size / (1024 * 1024)).toFixed(1)} MB`
+                        };
 
-                    const updatedHistory = [newExport, ...exportHistory].slice(0, 10);
-                    setExportHistory(updatedHistory);
-                    localStorage.setItem('eyai_export_history', JSON.stringify(updatedHistory));
+                        const updatedHistory = [newExport, ...exportHistory].slice(0, 10);
+                        setExportHistory(updatedHistory);
+                        localStorage.setItem('eyai_export_history', JSON.stringify(updatedHistory));
+                        
+                        alert('Export completed successfully!');
+                    } else {
+                        // Handle error response
+                        const text = await blob.text();
+                        console.error('Export error:', text);
+                        alert('Export failed: ' + text);
+                    }
+                } else {
+                    const errorText = await response.text();
+                    console.error('Export failed:', errorText);
+                    alert('Export failed: ' + errorText);
                 }
             }
-
-            alert('Export completed successfully!');
         } catch (error) {
             console.error('Export failed:', error);
-            alert('Export failed. Please ensure the backend is running.');
+            alert('Export failed. Please ensure the backend is running at http://localhost:8000');
         } finally {
             setIsExporting(false);
         }
@@ -127,7 +143,10 @@ export default function FDAExport() {
 
     const handleQuickExport = async (jobId) => {
         try {
-            const response = await fetch(`/api/v1/jobs/${jobId.replace('#', '')}/export`, {
+            // Use a demo job ID for export
+            const exportJobId = 'demo-export-' + Date.now();
+            
+            const response = await fetch(`/api/v1/jobs/${exportJobId}/export`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -140,32 +159,44 @@ export default function FDAExport() {
 
             if (response.ok) {
                 const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `FDA21_Report_${jobId}.pdf`;
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
+                
+                // Check if it's actually a PDF
+                if (blob.type === 'application/pdf' || blob.size > 1000) {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `FDA21_Report_${jobId}.pdf`;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
 
-                const newExport = {
-                    id: `EXP${Date.now()}`,
-                    jobId: jobId,
-                    format: 'PDF',
-                    timestamp: new Date().toLocaleString(),
-                    size: `${(blob.size / (1024 * 1024)).toFixed(1)} MB`
-                };
+                    const newExport = {
+                        id: `EXP${Date.now()}`,
+                        jobId: jobId,
+                        format: 'PDF',
+                        timestamp: new Date().toLocaleString(),
+                        size: `${(blob.size / (1024 * 1024)).toFixed(1)} MB`
+                    };
 
-                const updatedHistory = [newExport, ...exportHistory].slice(0, 10);
-                setExportHistory(updatedHistory);
-                localStorage.setItem('eyai_export_history', JSON.stringify(updatedHistory));
+                    const updatedHistory = [newExport, ...exportHistory].slice(0, 10);
+                    setExportHistory(updatedHistory);
+                    localStorage.setItem('eyai_export_history', JSON.stringify(updatedHistory));
 
-                alert('PDF downloaded successfully!');
+                    alert('PDF downloaded successfully!');
+                } else {
+                    const text = await blob.text();
+                    console.error('Export error:', text);
+                    alert('Export failed: ' + text);
+                }
+            } else {
+                const errorText = await response.text();
+                console.error('Export failed:', errorText);
+                alert('Export failed: ' + errorText);
             }
         } catch (error) {
             console.error('Quick export failed:', error);
-            alert('Export failed. Please ensure the backend is running.');
+            alert('Export failed. Please ensure the backend is running at http://localhost:8000');
         }
     };
 

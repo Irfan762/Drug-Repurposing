@@ -197,11 +197,6 @@ export default function Explainability() {
                         </div>
                     )}
                 </div>
-                
-                <p className="text-center text-gray-400 text-sm mt-8 font-semibold">
-                        6 specialized agents analyzed in parallel and converged on this candidate
-                    </p>
-                </div>
             </div>
 
             {/* Chain of Reasoning */}

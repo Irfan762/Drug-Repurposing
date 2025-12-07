@@ -68,7 +68,7 @@ export default function QueryBuilder() {
 
                 <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
                     Accelerate drug discovery by <span className="text-indigo-400 font-semibold">60-80%</span> using
-                    <span className="text-purple-400 font-semibold"> 7 specialized AI agents</span> analyzing
+                    <span className="text-purple-400 font-semibold"> 6 specialized AI agents</span> analyzing
                     billions of interactions in parallel.
                 </p>
                 
@@ -81,7 +81,7 @@ export default function QueryBuilder() {
                 <div className="flex flex-wrap justify-center gap-6 mt-8">
                     {[
                         { value: "25+", label: "FDA Drugs" },
-                        { value: "7", label: "AI Agents" },
+                        { value: "6", label: "AI Agents" },
                         { value: "10×", label: "Faster" },
                         { value: "92%", label: "Accuracy" }
                     ].map((stat, idx) => (
@@ -178,8 +178,8 @@ export default function QueryBuilder() {
                 {[
                     {
                         icon: Brain,
-                        title: "7 AI Agents",
-                        description: "Clinical, Genomics, Research, Market, IP, Safety & Master agents working in parallel"
+                        title: "6 AI Agents",
+                        description: "Clinical, Genomics, Research, Market, Patent, and Safety agents working in parallel"
                     },
                     {
                         icon: Shield,

@@ -74,8 +74,10 @@ async def create_job(
 
 @router.get("/{job_id}/status", response_model=JobStatusResponse)
 async def get_job_status(job_id: str) -> Any:
-    # Get real-time agent progress
-    progress_data = get_agent_progress()
+    # Get real-time agent progress for this specific job
+    progress_data = get_agent_progress(job_id)
+    
+    print(f"[STATUS] Job {job_id} - Progress data: {progress_data}")
     
     # Build per-agent status from real data
     per_agent_status = []
@@ -96,17 +98,22 @@ async def get_job_status(job_id: str) -> Any:
         if progress >= 100:
             completed_count += 1
         
-        per_agent_status.append({
+        agent_status = {
             "agent": agent_name,
             "state": status,
             "progress": progress,
             "task": task,
             "startedAt": "2025-12-06T01:30:00Z",
             "finishedAt": "2025-12-06T01:35:00Z" if progress >= 100 else None
-        })
+        }
+        
+        per_agent_status.append(agent_status)
+        print(f"[STATUS] {agent_name}: {status} - {progress}% - {task}")
     
     overall_progress = int(total_progress / len(agent_names)) if agent_names else 0
     job_status = JobStatusEnum.COMPLETED if completed_count == len(agent_names) else JobStatusEnum.RUNNING
+    
+    print(f"[STATUS] Overall: {job_status} - {overall_progress}% - {completed_count}/{len(agent_names)} completed")
     
     return {
         "status": job_status,
@@ -166,12 +173,16 @@ async def get_job_results(job_id: str) -> Any:
         "explanation": explanation
     }
 
-@router.post("/{job_id}/export", response_model=ExportResponse)
+@router.post("/{job_id}/export")
 async def export_job_results(
     job_id: str, 
     export_req: ExportRequest
     # Temporarily removed auth: current_user = Depends(deps.get_current_active_user)
 ) -> Any:
+    """
+    Generate and download FDA-21 compliant export
+    Returns PDF file directly for download
+    """
     # Generate actual export using CSV data
     try:
         from app.services.export_service import generate_fda21_pdf, generate_excel_export
@@ -179,41 +190,52 @@ async def export_job_results(
     except ImportError as e:
         raise HTTPException(status_code=500, detail=f"Export service not available: {e}")
     
-    export_id = str(uuid.uuid4())
+    print(f"[EXPORT] Starting export for job {job_id}")
     
-    # Get job data from CSV agents
-    agent_results = await orchestrate_csv_agents("Find kinase inhibitors for Alzheimer's")
-    result = await aggregate_csv_results(agent_results, "Find kinase inhibitors for Alzheimer's")
-    
-    candidates = result.get("candidates", [])
-    agent_outputs = result.get("agent_outputs", {})
-    prompt = "Find kinase inhibitors for Alzheimer's disease"
-    
-    # Generate PDF if requested
-    if "pdf" in [f.value for f in export_req.formats]:
-        try:
-            pdf_buffer = generate_fda21_pdf(job_id, prompt, candidates, agent_outputs)
-            
-            # Return file directly for download
-            return StreamingResponse(
-                io.BytesIO(pdf_buffer.read()),
-                media_type="application/pdf",
-                headers={"Content-Disposition": f"attachment; filename=FDA21_Report_{job_id}.pdf"}
-            )
-        except Exception as e:
-            print(f"[EXPORT] PDF generation failed: {e}")
-            # Return error response instead of crashing
-            return {
-                "exportId": export_id,
-                "status": "error",
-                "downloadUrl": None,
-                "error": f"PDF generation failed: {str(e)}"
-            }
-    
-    # For other formats, return export ID
-    return {
-        "exportId": export_id,
-        "status": "ready",
-        "downloadUrl": f"/api/v1/exports/{export_id}/download"
-    }
+    # Get job data from CSV agents (run demo query)
+    try:
+        agent_results = await orchestrate_csv_agents("Find kinase inhibitors for Alzheimer's disease", job_id)
+        result = await aggregate_csv_results(agent_results, "Find kinase inhibitors for Alzheimer's disease")
+        
+        candidates = result.get("candidates", [])
+        agent_outputs = result.get("agent_outputs", {})
+        prompt = "Find kinase inhibitors for Alzheimer's disease"
+        
+        print(f"[EXPORT] Generated {len(candidates)} candidates for export")
+        
+        # Generate PDF if requested
+        if "pdf" in [f.value for f in export_req.formats]:
+            try:
+                pdf_buffer = generate_fda21_pdf(job_id, prompt, candidates, agent_outputs)
+                
+                print(f"[EXPORT] PDF generated successfully, size: {pdf_buffer.tell()} bytes")
+                
+                # Return file directly for download
+                return StreamingResponse(
+                    pdf_buffer,
+                    media_type="application/pdf",
+                    headers={
+                        "Content-Disposition": f"attachment; filename=FDA21_Report_{job_id}.pdf",
+                        "Content-Type": "application/pdf"
+                    }
+                )
+            except Exception as e:
+                print(f"[EXPORT] PDF generation failed: {e}")
+                import traceback
+                traceback.print_exc()
+                raise HTTPException(status_code=500, detail=f"PDF generation failed: {str(e)}")
+        
+        # For other formats, return export ID
+        export_id = str(uuid.uuid4())
+        return {
+            "exportId": export_id,
+            "status": "ready",
+            "downloadUrl": f"/api/v1/exports/{export_id}/download"
+        }
+        
+    except Exception as e:
+        print(f"[EXPORT] Export failed: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Export failed: {str(e)}")
 

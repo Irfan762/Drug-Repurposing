@@ -29,10 +29,10 @@ RESEARCH_PAPERS = load_research_papers_from_csv()
 CLINICAL_TRIALS = load_clinical_trials_from_csv()
 PATENTS_DATABASE = load_patents_from_csv()
 
-print(f"[CSV_AGENTS] ✓ Loaded {len(DRUGS_DATABASE)} drugs")
-print(f"[CSV_AGENTS] ✓ Loaded {len(RESEARCH_PAPERS)} research papers")
-print(f"[CSV_AGENTS] ✓ Loaded {len(CLINICAL_TRIALS)} clinical trials")
-print(f"[CSV_AGENTS] ✓ Loaded {len(PATENTS_DATABASE)} patents")
+print(f"[CSV_AGENTS] Loaded {len(DRUGS_DATABASE)} drugs")
+print(f"[CSV_AGENTS] Loaded {len(RESEARCH_PAPERS)} research papers")
+print(f"[CSV_AGENTS] Loaded {len(CLINICAL_TRIALS)} clinical trials")
+print(f"[CSV_AGENTS] Loaded {len(PATENTS_DATABASE)} patents")
 
 
 class BaseAgent:
@@ -80,7 +80,7 @@ class MasterAgent(BaseAgent):
         
     async def decompose_query(self, prompt: str) -> List[Dict[str, Any]]:
         """Decompose user query into agent-specific tasks"""
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.1)
         
         tasks = [
             {"agent": "clinical", "task": f"Analyze clinical trials for: {prompt[:50]}", "query": prompt},
@@ -105,17 +105,17 @@ class ClinicalAgent(BaseAgent):
         self.status = "running"
         
         await self.update_progress(10, "Connecting to ClinicalTrials.gov API...")
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.1)
         
         await self.update_progress(25, "Querying 50,000+ clinical trials...")
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.1)
         
         query = task.get('query', '')
         
         await self.update_progress(40, "Analyzing Phase II/III outcomes...")
         # Find relevant drugs
         matched_drugs = search_drugs_by_query(query, DRUGS_DATABASE)
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.1)
         
         await self.update_progress(60, "Extracting adverse event data...")
         # Find trials for these drugs
@@ -123,10 +123,10 @@ class ClinicalAgent(BaseAgent):
         for drug in matched_drugs[:5]:
             drug_trials = search_trials_by_drug(drug['drugName'], CLINICAL_TRIALS)
             all_trials.extend(drug_trials)
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.1)
         
         await self.update_progress(80, "Validating efficacy signals...")
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.1)
         
         # Build comprehensive result from REAL data
         result = {
@@ -170,7 +170,7 @@ class ClinicalAgent(BaseAgent):
         else:
             result["summary"] = "No clinical trials found for this query. Consider broader search terms."
         
-        await self.update_progress(100, f"✓ Analysis complete - {result['trials_found']} trials found")
+        await self.update_progress(100, f"Analysis complete - {result['trials_found']} trials found")
         self.status = "completed"
         return result
 
@@ -186,16 +186,16 @@ class GenomicsAgent(BaseAgent):
         self.status = "running"
         
         await self.update_progress(10, "Connecting to AlphaFold2 endpoint...")
-        await asyncio.sleep(0.6)
+        await asyncio.sleep(0.1)
         
         await self.update_progress(30, "Loading protein interaction networks...")
-        await asyncio.sleep(0.6)
+        await asyncio.sleep(0.1)
         
         query = task.get('query', '')
         matched_drugs = search_drugs_by_query(query, DRUGS_DATABASE)
         
         await self.update_progress(50, "Analyzing binding affinity predictions...")
-        await asyncio.sleep(0.6)
+        await asyncio.sleep(0.1)
         
         await self.update_progress(70, "Validating pathway engagement...")
         # Collect unique targets from matched drugs
@@ -213,7 +213,7 @@ class GenomicsAgent(BaseAgent):
                 'bioavailability': drug.get('bioavailability', 'N/A'),
                 'halfLife': drug.get('halfLife', 'N/A')
             })
-        await asyncio.sleep(0.6)
+        await asyncio.sleep(0.1)
         
         result = {
             "target_proteins": list(all_targets)[:10],
@@ -231,7 +231,7 @@ class GenomicsAgent(BaseAgent):
         
         result["summary"] = f"Identified {len(all_targets)} unique protein targets across {len(matched_drugs)} candidate drugs. Key pathways: {', '.join(result['pathways'][:3])}"
         
-        await self.update_progress(100, f"✓ Analysis complete - {len(all_targets)} targets identified")
+        await self.update_progress(100, f"Analysis complete - {len(all_targets)} targets identified")
         self.status = "completed"
         return result
     
@@ -271,12 +271,12 @@ class ResearchAgent(BaseAgent):
         self.status = "running"
         
         await self.update_progress(15, "Initializing PubMed search engine...")
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.1)
         
         await self.update_progress(35, "Mining 5,000+ research papers...")
         query = task.get('query', '')
         matched_drugs = search_drugs_by_query(query, DRUGS_DATABASE)
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.1)
         
         await self.update_progress(60, "Extracting key findings...")
         # Find papers for matched drugs
@@ -284,7 +284,7 @@ class ResearchAgent(BaseAgent):
         for drug in matched_drugs[:8]:
             drug_papers = search_papers_by_drug(drug['drugName'], RESEARCH_PAPERS)
             all_papers.extend(drug_papers)
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.1)
         
         # Calculate metrics from REAL data
         total_citations = sum([p['citationCount'] for p in all_papers])
@@ -314,7 +314,7 @@ class ResearchAgent(BaseAgent):
         
         result["summary"] = f"Analyzed {len(all_papers)} peer-reviewed publications with {total_citations} total citations. {len(high_impact)} high-impact studies identified."
         
-        await self.update_progress(100, f"✓ Analysis complete - {len(all_papers)} papers analyzed")
+        await self.update_progress(100, f"Analysis complete - {len(all_papers)} papers analyzed")
         self.status = "completed"
         return result
 
@@ -330,15 +330,15 @@ class MarketAgent(BaseAgent):
         self.status = "running"
         
         await self.update_progress(20, "Connecting to market intelligence APIs...")
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.1)
         
         await self.update_progress(45, "Analyzing competitive landscape...")
         query = task.get('query', '')
         matched_drugs = search_drugs_by_query(query, DRUGS_DATABASE)
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.1)
         
         await self.update_progress(70, "Calculating market size projections...")
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.1)
         
         # Calculate market metrics from REAL data
         market_values = []
@@ -380,7 +380,7 @@ class MarketAgent(BaseAgent):
         
         result["summary"] = f"Market size: {market_size} (2024) → {projected_growth}. Strong commercial potential with {cagr} CAGR."
         
-        await self.update_progress(100, f"✓ Analysis complete - Market size: {market_size}")
+        await self.update_progress(100, f"Analysis complete - Market size: {market_size}")
         self.status = "completed"
         return result
 
@@ -396,12 +396,12 @@ class PatentAgent(BaseAgent):
         self.status = "running"
         
         await self.update_progress(15, "Querying USPTO database...")
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.1)
         
         await self.update_progress(40, "Scanning EPO patent registry...")
         query = task.get('query', '')
         matched_drugs = search_drugs_by_query(query, DRUGS_DATABASE)
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.1)
         
         await self.update_progress(65, "Analyzing prior art landscape...")
         # Find patents for matched drugs
@@ -409,7 +409,7 @@ class PatentAgent(BaseAgent):
         for drug in matched_drugs[:8]:
             drug_patents = search_patents_by_drug(drug['drugName'], PATENTS_DATABASE)
             all_patents.extend(drug_patents)
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.1)
         
         # Analyze patent status from REAL data
         expired_patents = [p for p in all_patents if 'expired' in p['status'].lower()]
@@ -449,7 +449,7 @@ class PatentAgent(BaseAgent):
         
         result["summary"] = f"Analyzed {len(all_patents)} patents: {len(expired_patents)} expired, {len(active_patents)} active. FTO status: {fto_status}"
         
-        await self.update_progress(100, f"✓ Analysis complete - {len(all_patents)} patents analyzed")
+        await self.update_progress(100, f"Analysis complete - {len(all_patents)} patents analyzed")
         self.status = "completed"
         return result
 
@@ -465,15 +465,15 @@ class SafetyAgent(BaseAgent):
         self.status = "running"
         
         await self.update_progress(20, "Accessing FDA AERS database...")
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.1)
         
         await self.update_progress(50, "Analyzing toxicity profiles...")
         query = task.get('query', '')
         matched_drugs = search_drugs_by_query(query, DRUGS_DATABASE)
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.1)
         
         await self.update_progress(75, "Reviewing black box warnings...")
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.1)
         
         # Collect adverse events from REAL drug data
         all_adverse_events = []
@@ -510,41 +510,53 @@ class SafetyAgent(BaseAgent):
         
         result["summary"] = f"Analyzed safety data for {len(matched_drugs)} drugs. {len(set(all_adverse_events))} unique adverse events identified. {len(serious_events)} serious events require monitoring."
         
-        await self.update_progress(100, f"✓ Analysis complete - {len(matched_drugs)} drugs analyzed")
+        await self.update_progress(100, f"Analysis complete - {len(matched_drugs)} drugs analyzed")
         self.status = "completed"
         return result
 
 
-# Global progress tracker for real-time updates
+# Global progress tracker for real-time updates - keyed by job_id
 AGENT_PROGRESS_STORE = {}
 
-async def progress_callback(agent_name: str, progress: int, task: str):
+async def progress_callback(agent_name: str, progress: int, task: str, job_id: str = None):
     """Store agent progress for real-time API access"""
     # Store with lowercase key for consistent access
     key = agent_name.lower()
     
     # Determine status based on progress and task content
-    if progress >= 100 or "✓ Analysis complete" in task:
+    if progress >= 100 or "Analysis complete" in task:
         status = "completed"
     elif progress > 0:
         status = "running"
     else:
         status = "pending"
     
+    # Store globally (for backward compatibility)
     AGENT_PROGRESS_STORE[key] = {
         "progress": progress,
         "task": task,
         "status": status
     }
+    
+    # Also store per-job if job_id provided
+    if job_id:
+        if job_id not in AGENT_PROGRESS_STORE:
+            AGENT_PROGRESS_STORE[job_id] = {}
+        AGENT_PROGRESS_STORE[job_id][key] = {
+            "progress": progress,
+            "task": task,
+            "status": status
+        }
+    
     print(f"[{agent_name.upper()}] {progress}% - {task} [{status.upper()}]")
 
 async def orchestrate_csv_agents(query: str, job_id: str = None) -> Dict[str, Any]:
     """
     Main orchestration function - coordinates all CSV-based agents
     """
-    print(f"\n[CSV_ORCHESTRATOR] Starting analysis for query: '{query[:50]}...'")
+    print(f"\n[CSV_ORCHESTRATOR] Starting analysis for query: '{query[:50]}...' [Job: {job_id}]")
     
-    # Initialize progress tracking
+    # Initialize progress tracking for this job
     if job_id:
         AGENT_PROGRESS_STORE[job_id] = {}
     
@@ -561,9 +573,15 @@ async def orchestrate_csv_agents(query: str, job_id: str = None) -> Dict[str, An
         "safety": SafetyAgent(),
     }
     
-    # Set progress callback for each agent
+    # Set progress callback for each agent with job_id
     for agent in agents_map.values():
-        agent.progress_callback = progress_callback
+        # Create a closure to capture job_id
+        async def make_callback(agent_name, job_id):
+            async def callback(name, progress, task):
+                await progress_callback(name, progress, task, job_id)
+            return callback
+        
+        agent.progress_callback = await make_callback(agent.name, job_id)
     
     # Execute all agents in parallel
     agent_results = {}
@@ -579,15 +597,19 @@ async def orchestrate_csv_agents(query: str, job_id: str = None) -> Dict[str, An
     results = await asyncio.gather(*[task[1] for task in agent_tasks])
     for (agent_name, _), result in zip(agent_tasks, results):
         agent_results[agent_name] = result
-        print(f"[CSV_ORCHESTRATOR] ✓ {agent_name.capitalize()} agent completed")
+        print(f"[CSV_ORCHESTRATOR] {agent_name.capitalize()} agent completed")
     
     print(f"[CSV_ORCHESTRATOR] All {len(agent_results)} agents completed successfully")
     
     return agent_results
 
-def get_agent_progress() -> Dict[str, Any]:
-    """Get current progress of all agents"""
-    return AGENT_PROGRESS_STORE.copy()
+def get_agent_progress(job_id: str = None) -> Dict[str, Any]:
+    """Get current progress of all agents, optionally for a specific job"""
+    if job_id and job_id in AGENT_PROGRESS_STORE:
+        return AGENT_PROGRESS_STORE[job_id].copy()
+    
+    # Return global progress (excluding job-specific keys)
+    return {k: v for k, v in AGENT_PROGRESS_STORE.items() if not k.startswith('0') and not k.startswith('1') and not k.startswith('2') and not k.startswith('3') and not k.startswith('4') and not k.startswith('5') and not k.startswith('6') and not k.startswith('7') and not k.startswith('8') and not k.startswith('9')}
 
 
 async def aggregate_csv_results(agent_results: Dict[str, Any], query: str) -> Dict[str, Any]:
