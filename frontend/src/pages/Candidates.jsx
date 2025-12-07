@@ -45,13 +45,22 @@ export default function Candidates() {
     }, [jobId, location.state]);
 
     const handleExport = async () => {
-        if (!jobId) return;
+        if (!jobId) {
+            alert('No job ID available for export');
+            return;
+        }
 
         setIsExporting(true);
         try {
             console.log('[EXPORT] Starting export for job:', jobId);
             
-            const response = await fetch(`/api/v1/jobs/${jobId}/export`, {
+            // Use the API service instead of direct fetch
+            const API_URL = import.meta.env.VITE_API_URL || '';
+            const exportUrl = `${API_URL}/api/v1/jobs/${jobId}/export`;
+            
+            console.log('[EXPORT] Export URL:', exportUrl);
+            
+            const response = await fetch(exportUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

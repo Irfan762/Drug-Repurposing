@@ -79,11 +79,17 @@ export default function FDAExport() {
 
         setIsExporting(true);
         try {
-            // Use a demo job ID for export (backend will generate demo data)
-            const jobId = 'demo-export-' + Date.now();
+            // Use the selected job ID or demo ID
+            const jobId = selectedJob.id || 'demo-export-' + Date.now();
+            
+            // Get API URL from environment
+            const API_URL = import.meta.env.VITE_API_URL || '';
+            const exportUrl = `${API_URL}/api/v1/jobs/${jobId}/export`;
+            
+            console.log('[EXPORT] Exporting job:', jobId, 'to:', exportUrl);
             
             if (selectedFormats.includes('pdf')) {
-                const response = await fetch(`/api/v1/jobs/${jobId}/export`, {
+                const response = await fetch(exportUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -143,10 +149,13 @@ export default function FDAExport() {
 
     const handleQuickExport = async (jobId) => {
         try {
-            // Use a demo job ID for export
-            const exportJobId = 'demo-export-' + Date.now();
+            // Get API URL from environment
+            const API_URL = import.meta.env.VITE_API_URL || '';
+            const exportUrl = `${API_URL}/api/v1/jobs/${jobId}/export`;
             
-            const response = await fetch(`/api/v1/jobs/${exportJobId}/export`, {
+            console.log('[QUICK EXPORT] Exporting job:', jobId, 'to:', exportUrl);
+            
+            const response = await fetch(exportUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
